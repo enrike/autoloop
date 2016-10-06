@@ -1,7 +1,7 @@
 -- autoloop logic by ixi-audio.net 
 -- license : GPL
 
-local Autoloop = pd.Class:new():register("autoloop") -- pd name
+local Autoloop = pd.Class:new():register("autolooplua") -- pd name
 
 function Autoloop:initialize(name, atoms)
   self.inlets = 3
@@ -89,7 +89,7 @@ function Autoloop:nextTimeOut()
 
     self.sequIndex = self.sequIndex + 1
 
-    if self.sequIndex > table.getn(self.sequ) then 
+    if self.sequIndex > #self.sequ then --table.getn(self.sequ) then 
 	pd.post("end of seq reached")
 	self.sequIndex = 1 -- reset in end
     end
@@ -97,7 +97,7 @@ function Autoloop:nextTimeOut()
     -- if next sequ is 0 then check the following one and so on... until one is not 0
     while self.sequ[self.sequIndex] <= 0 do -- time is zero
        self.sequIndex = self.sequIndex + 1 -- so try next
-       if self.sequIndex > table.getn(self.sequ) then --  reset and continue
+       if self.sequIndex > #self.sequ then -- table.getn(self.sequ) then --  reset and continue
 	    self.sequIndex = 1 -- reset in end
 	end
     end
@@ -115,14 +115,14 @@ function Autoloop:nextTimeOut()
 
     self.layerIndex = self.layerIndex + 1
 
-    if self.layerIndex > table.getn(self.layersStatus) then
+    if self.layerIndex > #self.sequ then -- table.getn(self.layersStatus) then
 	pd.post("last layer reached")
         self.layerIndex = 1 -- reset in end (8)
     end
 
     while self.layersStatus[self.layerIndex] <= 0 do -- it was off
 	self.layerIndex = self.layerIndex + 1 -- try next
-	if self.layerIndex > table.getn(self.layersStatus) then
+	if self.layerIndex > #self.layersStatus then -- table.getn(self.layersStatus) then
 	    self.layerIndex = 1 -- reset in end
 	end
     end
